@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://abhinandnm.github.io/aws-eraser-gitpage/sitemap.xml
