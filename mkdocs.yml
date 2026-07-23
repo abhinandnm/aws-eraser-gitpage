@@ -42,6 +42,9 @@ theme:
     - content.code.copy
     - content.code.annotate
 
+extra:
+  generator: false
+
 plugins:
   - search
 
