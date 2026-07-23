@@ -1,10 +1,10 @@
 site_name: AWS Eraser
-site_url: https://abhinandnm.github.io/aws-eraser-web/
+site_url: https://abhinandnm.github.io/aws-eraser-gitpage/
 site_description: Fastest zero-cloud-setup CLI utility to scan, audit, and clean active billing resources across all AWS regions.
 site_author: Abhinandan (abhinandnm)
 
-repo_name: abhinandnm/aws-eraser
-repo_url: https://github.com/abhinandnm/aws-eraser
+repo_name: abhinandnm/aws-eraser-gitpage
+repo_url: https://github.com/abhinandnm/aws-eraser-gitpage
 edit_uri: blob/main/docs/
 
 theme:
