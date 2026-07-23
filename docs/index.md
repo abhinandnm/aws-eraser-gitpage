@@ -13,7 +13,7 @@ The **fastest and simplest solution** to scan, audit, and clean active billing r
 
 ## What is AWS Eraser?
 
-AWS Eraser (formerly known as AWS Terminator) is an open-source command-line tool built with `boto3`. It dynamically scans all active and opted-in global AWS regions, detects resources quietly generating hourly or monthly charges, presents a numbered interactive summary list, and permits **selective resource deletion** (`1, 3, 5-8`) or complete account nuking.
+AWS Eraser is an open-source command-line tool built with `boto3`. It dynamically scans all active and opted-in global AWS regions, detects resources quietly generating hourly or monthly charges, presents a numbered interactive summary list, and permits **selective resource deletion** (`1, 3, 5-8`) or complete account nuking.
 
 ### Key Highlights
 
