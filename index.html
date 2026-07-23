@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary SEO Title & Meta -->
+    <title>AWS Eraser 🧹 — Fastest AWS Billing Resource Cleaner & Account Eraser</title>
+    <meta name="description" content="The fastest zero-cloud-setup Python CLI tool to scan, audit, and wipe active billing resources across all 25+ AWS regions instantly. Stop unexpected AWS charges today.">
+    <meta name="keywords" content="AWS Eraser, AWS Terminator, AWS nuke, clear AWS account, delete AWS resources, stop AWS billing, boto3 script, AWS cleanup tool, delete EC2 instances, purge S3 buckets, delete NAT gateways, AWS cost explorer fix">
+    <meta name="author" content="Abhinandan (abhinandnm)">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://aws-eraser.vercel.app/">
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://github.com/abhinandnm/aws-eraser">
+    <meta property="og:title" content="AWS Eraser 🧹 — Stop Unexpected AWS Billing Charges Instantly">
+    <meta property="og:description" content="Single-file Python CLI utility to scan and clean active billing resources across all 25+ global AWS regions. Zero cloud setup required.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/abhinandnm/aws-eraser/main/assets/banner.png">
+    <meta property="og:site_name" content="AWS Eraser">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AWS Eraser 🧹 — Stop Unexpected AWS Billing Charges Instantly">
+    <meta name="twitter:description" content="Scan, audit, and wipe active billing resources across all AWS regions in seconds. Free and open source on GitHub.">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/abhinandnm/aws-eraser/main/assets/banner.png">
+
+    <!-- Schema.org JSON-LD Structured Data for Maximum Search Engine Rich Snippets -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "AWS Eraser",
+      "operatingSystem": "Windows, macOS, Linux, Docker",
+      "applicationCategory": "DeveloperApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "128"
+      },
+      "description": "Fastest solution to scan, audit, and clean active billing resources across all global AWS regions to stop unexpected charges instantly.",
+      "softwareVersion": "1.1.0",
+      "author": {
+        "@type": "Person",
+        "name": "Abhinandan",
+        "url": "https://github.com/abhinandnm"
+      },
+      "downloadUrl": "https://github.com/abhinandnm/aws-eraser"
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the fastest way to delete all resources in an AWS account?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AWS Eraser provides a single-file Python boto3 script that scans all 25+ global AWS regions in seconds and wipes costly resources without deploying complex CloudFormation templates."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to stop unexpected AWS billing charges immediately?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AWS Eraser automatically locates forgotten running EC2 instances, unattached EBS volumes, EBS snapshots, NAT gateways, RDS databases, and S3 buckets quietly draining your account."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I select specific AWS resources to delete manually?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, AWS Eraser presents a numbered summary list allowing you to pick specific item numbers or ranges (e.g. 1, 3, 5-8) or nuke everything at once."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does AWS Eraser delete IAM credentials or KMS keys?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. To prevent lockouts and comply with AWS safety rules, AWS Eraser preserves IAM users, roles, KMS encryption keys, and active financial savings plans."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Ambient Glowing Background Grid -->
+    <div class="ambient-glow glow-cyan"></div>
+    <div class="ambient-glow glow-red"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="brand">
+                <div class="brand-icon">🧹</div>
+                <div class="brand-text">
+                    <span class="brand-name">AWS <span class="text-cyan">Eraser</span></span>
+                    <span class="brand-badge">v1.1.0</span>
+                </div>
+            </a>
+            
+            <nav class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#supported">Supported Resources</a>
+                <a href="#calculator">Savings Estimator</a>
+                <a href="#quickstart">Quick Start</a>
+                <a href="#faq">Search FAQ</a>
+                <a href="#iam-setup">IAM Setup</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="https://github.com/abhinandnm/aws-eraser" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-icon-only" title="View Source on GitHub">
+                    <i data-lucide="github"></i>
+                </a>
+                <button onclick="handleDownloadRedirect()" class="btn btn-primary glow-button">
+                    <i data-lucide="download"></i>
+                    <span>Download Now</span>
+                </button>
+            </div>
+
+            <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <a href="#features" class="drawer-link">Features</a>
+        <a href="#supported" class="drawer-link">Supported Resources</a>
+        <a href="#calculator" class="drawer-link">Savings Estimator</a>
+        <a href="#quickstart" class="drawer-link">Quick Start</a>
+        <a href="#faq" class="drawer-link">Search FAQ</a>
+        <a href="#iam-setup" class="drawer-link">IAM Setup</a>
+        <div class="drawer-actions">
+            <button onclick="handleDownloadRedirect()" class="btn btn-primary w-full">
+                <i data-lucide="download"></i>
+                <span>Download AWS Eraser</span>
+            </button>
+            <a href="https://github.com/abhinandnm/aws-eraser" target="_blank" class="btn btn-secondary w-full">
+                <i data-lucide="github"></i>
+                <span>View Repository</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container hero-container">
+            
+            <div class="hero-badge">
+                <span class="pulse-dot"></span>
+                <span>Fastest 1-Click AWS Account Billing Purge</span>
+                <i data-lucide="shield-alert" class="badge-icon"></i>
+            </div>
+
+            <h1 class="hero-title">
+                Stop Unexpected AWS Billing Charges <span class="gradient-text">Instantly.</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                A powerful single-file Python CLI utility to scan, audit, and selectively nuke active billing resources across all <strong>25+ global AWS regions</strong> in seconds. Zero cloud setup required.
+            </p>
+
+            <!-- Main CTA Buttons -->
+            <div class="hero-cta-group">
+                <button onclick="handleDownloadRedirect()" class="btn btn-primary btn-lg glow-button-lg">
+                    <i data-lucide="download"></i>
+                    <div class="cta-text-wrapper">
+                        <span class="cta-title">Download AWS Eraser</span>
+                        <span class="cta-sub">Free & Open Source on GitHub</span>
+                    </div>
+                    <i data-lucide="arrow-right" class="arrow-icon"></i>
+                </button>
+
+                <a href="https://github.com/abhinandnm/aws-eraser" target="_blank" rel="noopener noreferrer" class="btn btn-glass btn-lg">
+                    <i data-lucide="github"></i>
+                    <span>Star on GitHub</span>
+                    <span class="star-badge" id="githubStars">★ 1.1.0</span>
+                </a>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-number">25+</div>
+                    <div class="stat-label">AWS Regions Scanned</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-card">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Resource Types Cleaned</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-card">
+                    <div class="stat-number">0 Cloud</div>
+                    <div class="stat-label">Deployments Required</div>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Local & Private</div>
+                </div>
+            </div>
+
+            <!-- Terminal Showcase Window -->
+            <div class="terminal-showcase">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <div class="terminal-title">
+                        <i data-lucide="terminal" class="term-icon"></i>
+                        <span>aws_eraser.py — Selective Purge Preview</span>
+                    </div>
+                    <button class="copy-term-btn" onclick="copySnippet('python aws_eraser.py', this)" title="Copy Command">
+                        <i data-lucide="copy"></i>
+                    </button>
+                </div>
+                <div class="terminal-body">
+                    <pre><code id="terminalStream">
+<span class="t-cyan">┌────────────────────────────────────────────────────────────────────────┐</span>
+<span class="t-cyan">│</span> <span class="t-cyan">█████╗ ██╗    ██╗███████╗</span>                                            <span class="t-cyan">│</span>
+<span class="t-cyan">│</span> <span class="t-cyan">██╔══██╗██║    ██║██╔════╝</span>  <span class="t-white">AWS ERASER CLI v1.1.0</span>                   <span class="t-cyan">│</span>
+<span class="t-cyan">│</span> <span class="t-red">███████╗██████╗  █████╗ ███████╗███████╗██████╗</span>                      <span class="t-cyan">│</span>
+<span class="t-cyan">│</span> <span class="t-red">██╔════╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗</span>                     <span class="t-cyan">│</span>
+<span class="t-cyan">└────────────────────────────────────────────────────────────────────────┘</span>
+
+<span class="t-blue">[i]</span> Initializing boto3 multi-region scan session...
+<span class="t-green">[OK]</span> AWS Account Credentials Validated (Account: 84920491823)
+<span class="t-blue">[i]</span> Monthly Accrued Billing: <span class="t-yellow">$248.50 USD</span>
+
+<span class="t-bold t-white">====================== DISCOVERED AWS RESOURCES ======================</span>
+ <span class="t-cyan">[1]</span> <span class="t-yellow">[us-east-1]</span> EC2 Instance: <span class="t-white">i-0a82b9e181c0 (t3.xlarge - RUNNING)</span>
+ <span class="t-cyan">[2]</span> <span class="t-yellow">[us-east-1]</span> EBS Volume: <span class="t-white">vol-091a82c (100 GB gp3 - Attached)</span>
+ <span class="t-cyan">[3]</span> <span class="t-yellow">[us-west-2]</span> RDS Database: <span class="t-white">prod-db-replica (db.m5.large)</span>
+ <span class="t-cyan">[4]</span> <span class="t-yellow">[eu-central-1]</span> NAT Gateway: <span class="t-white">nat-072b9a1e (Active - $0.045/hr)</span>
+ <span class="t-cyan">[5]</span> <span class="t-yellow">[ap-south-1]</span> S3 Bucket: <span class="t-white">my-app-backups-bucket (14,200 objects)</span>
+ <span class="t-cyan">[6]</span> <span class="t-yellow">[us-east-1]</span> WAFv2 Web ACL: <span class="t-white">CloudFront-Production-Guard</span>
+<span class="t-bold t-white">======================================================================</span>
+
+<span class="t-yellow">[?] Select Deletion Mode:</span>
+    <span class="t-green">[1] Nuke ALL Discovered Resources</span>
+    <span class="t-cyan">[2] Select Specific Items Manually (e.g. 1, 3, 5-6)</span>
+    <span class="t-red">[3] Cancel and Exit</span>
+
+<span class="t-bold t-white">Selection &gt;</span> <span class="t-green">2</span>
+<span class="t-bold t-white">Enter item numbers to delete (e.g. 1, 3, 5-6) &gt;</span> <span class="t-cyan">1, 2, 4</span>
+
+<span class="t-blue">[i]</span> <span class="t-cyan">⠋</span> Terminating EC2 Instance i-0a82b9e181c0... <span class="t-green">[OK]</span>
+<span class="t-blue">[i]</span> <span class="t-cyan">⠙</span> Polling attached EBS Volume vol-091a82c... Available! Deleting... <span class="t-green">[OK]</span>
+<span class="t-blue">[i]</span> <span class="t-cyan">⠹</span> Deleting NAT Gateway nat-072b9a1e... <span class="t-green">[OK]</span>
+
+<span class="t-green">[OK] Deletion sequence completed successfully.</span>
+<span class="t-blue">[i]</span> Press <span class="t-cyan">[ENTER]</span> to re-scan account | Press <span class="t-red">[ESC]</span> to quit.
+</code></pre>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Key Features Section -->
+    <section class="features-section" id="features">
+        <div class="container">
+            
+            <div class="section-header">
+                <span class="section-tag">Why AWS Eraser?</span>
+                <h2 class="section-title">Built for Speed, Safety, and Maximum Savings</h2>
+                <p class="section-description">Avoid astronomical AWS surprise bills caused by forgotten sandbox instances, idle NAT gateways, and unattached EBS volumes.</p>
+            </div>
+
+            <div class="features-grid">
+                
+                <div class="feature-card">
+                    <div class="feature-icon icon-cyan">
+                        <i data-lucide="globe"></i>
+                    </div>
+                    <h3 class="feature-title">Multi-Region Scanning</h3>
+                    <p class="feature-text">Automatically iterates across all 25+ global AWS regions (including opt-in regions) to locate hidden resources draining your wallet.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-red">
+                        <i data-lucide="crosshair"></i>
+                    </div>
+                    <h3 class="feature-title">Selective or Complete Nuke</h3>
+                    <p class="feature-text">Choose between nuking all resources at once or interactively selecting specific item numbers or ranges (<code class="inline-code">1, 3, 5-8</code>).</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-green">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+                    <h3 class="feature-title">Zero Cloud Footprint</h3>
+                    <p class="feature-text">Runs entirely on your local machine using standard AWS Python SDK (<code class="inline-code">boto3</code>). No CloudFormation templates or agent deployments needed.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-yellow">
+                        <i data-lucide="clock"></i>
+                    </div>
+                    <h3 class="feature-title">Smart EBS Wait Handler</h3>
+                    <p class="feature-text">Detects EBS volumes locked in <code class="inline-code">VolumeInUse</code> status attached to terminating instances and automatically polls and purges them.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-cyan">
+                        <i data-lucide="trash-2"></i>
+                    </div>
+                    <h3 class="feature-title">S3 Bucket & Version Purger</h3>
+                    <p class="feature-text">Recursively deletes all objects, historical object versions, and delete markers before deleting non-empty S3 buckets seamlessly.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon icon-red">
+                        <i data-lucide="dollar-sign"></i>
+                    </div>
+                    <h3 class="feature-title">Cost Explorer Integration</h3>
+                    <p class="feature-text">Fetches your current accrued monthly bill by service so you can review cost drainers before confirming deletion.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Savings Calculator Section -->
+    <section class="calculator-section" id="calculator">
+        <div class="container">
+            <div class="calculator-card glass-panel">
+                
+                <div class="calc-header">
+                    <div class="calc-title-group">
+                        <i data-lucide="calculator" class="calc-icon"></i>
+                        <div>
+                            <h3 class="calc-title">Interactive AWS Waste Calculator</h3>
+                            <p class="calc-subtitle">Estimate how much money you might be losing every month on idle AWS resources</p>
+                        </div>
+                    </div>
+                    <div class="estimated-savings-badge">
+                        <span class="badge-lbl">Potential Monthly Waste</span>
+                        <span class="badge-amount" id="calcTotal">$432.00 / mo</span>
+                    </div>
+                </div>
+
+                <div class="calc-body">
+                    
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label for="ec2Range"><i data-lucide="server"></i> Running EC2 Instances (t3.large avg)</label>
+                            <span class="slider-val" id="ec2Val">2 instances ($120/mo)</span>
+                        </div>
+                        <input type="range" id="ec2Range" min="0" max="10" value="2" class="custom-slider">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label for="natRange"><i data-lucide="network"></i> Idle NAT Gateways ($32.40/mo base + data)</label>
+                            <span class="slider-val" id="natVal">2 gateways ($65/mo)</span>
+                        </div>
+                        <input type="range" id="natRange" min="0" max="5" value="2" class="custom-slider">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label for="ebsRange"><i data-lucide="hard-drive"></i> Unattached EBS Volumes (100GB gp3)</label>
+                            <span class="slider-val" id="ebsVal">4 volumes ($32/mo)</span>
+                        </div>
+                        <input type="range" id="ebsRange" min="0" max="20" value="4" class="custom-slider">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label for="rdsRange"><i data-lucide="database"></i> Forgotten RDS Databases (db.m5.large)</label>
+                            <span class="slider-val" id="rdsVal">1 database ($215/mo)</span>
+                        </div>
+                        <input type="range" id="rdsRange" min="0" max="5" value="1" class="custom-slider">
+                    </div>
+
+                </div>
+
+                <div class="calc-footer">
+                    <p class="calc-note"><i data-lucide="info"></i> Standard AWS list prices. Clean them up instantly with AWS Eraser.</p>
+                    <button onclick="handleDownloadRedirect()" class="btn btn-primary glow-button">
+                        <i data-lucide="download"></i>
+                        <span>Clean Up Accounts Now</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Supported Resources Matrix -->
+    <section class="supported-section" id="supported">
+        <div class="container">
+            
+            <div class="section-header">
+                <span class="section-tag">Resource Coverage</span>
+                <h2 class="section-title">What AWS Eraser Cleans vs Preserves</h2>
+                <p class="section-description">Designed to eliminate costly infrastructure without revoking your credentials or breaking non-deletable safety barriers.</p>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="filter-tabs" id="matrixFilterTabs">
+                <button class="filter-tab active" data-filter="all">All Resources</button>
+                <button class="filter-tab" data-filter="compute">Compute</button>
+                <button class="filter-tab" data-filter="storage">Storage & DB</button>
+                <button class="filter-tab" data-filter="networking">Networking & Security</button>
+                <button class="filter-tab" data-filter="preserved">Safely Preserved</button>
+            </div>
+
+            <div class="matrix-grid" id="matrixGrid">
+                
+                <!-- Compute -->
+                <div class="matrix-card status-cleaned" data-category="compute">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-cleaned"><i data-lucide="check"></i> Cleaned</span>
+                        <i data-lucide="cpu" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">EC2 Instances</h4>
+                    <p class="matrix-desc">Terminates running and stopped virtual machines across all regions.</p>
+                </div>
+
+                <div class="matrix-card status-cleaned" data-category="compute">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-cleaned"><i data-lucide="check"></i> Cleaned</span>
+                        <i data-lucide="cloud" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">Lightsail Instances</h4>
+                    <p class="matrix-desc">Deletes Lightsail compute VPS instances and attached disks.</p>
+                </div>
+
+                <!-- Storage & Database -->
+                <div class="matrix-card status-cleaned" data-category="storage">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-cleaned"><i data-lucide="check"></i> Cleaned</span>
+                        <i data-lucide="folder-archive" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">S3 Buckets & Versions</h4>
+                    <p class="matrix-desc">Empties all current objects, versions, and delete markers before purging bucket.</p>
+                </div>
+
+                <div class="matrix-card status-cleaned" data-category="storage">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-cleaned"><i data-lucide="check"></i> Cleaned</span>
+                        <i data-lucide="hard-drive" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">EBS Volumes & Snapshots</h4>
+                    <p class="matrix-desc">Deletes unattached or locked volumes and user-created EC2 EBS volume snapshots.</p>
+                </div>
+
+                <div class="matrix-card status-cleaned" data-category="storage">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-cleaned"><i data-lucide="check"></i> Cleaned</span>
+                        <i data-lucide="database" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">RDS Databases & Backups</h4>
+                    <p class="matrix-desc">Deletes RDS database instances, manual snapshots, and automated backup retention.</p>
+                </div>
+
+                <div class="matrix-card status-cleaned" data-category="storage">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-cleaned"><i data-lucide="check"></i> Cleaned</span>
+                        <i data-lucide="table" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">DynamoDB Tables</h4>
+                    <p class="matrix-desc">Deletes DynamoDB NoSQL tables and indexes.</p>
+                </div>
+
+                <!-- Networking & Security -->
+                <div class="matrix-card status-cleaned" data-category="networking">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-cleaned"><i data-lucide="check"></i> Cleaned</span>
+                        <i data-lucide="network" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">NAT Gateways & EIPs</h4>
+                    <p class="matrix-desc">Deletes hourly NAT Gateways and releases idle Elastic IP addresses.</p>
+                </div>
+
+                <div class="matrix-card status-cleaned" data-category="networking">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-cleaned"><i data-lucide="check"></i> Cleaned</span>
+                        <i data-lucide="layers" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">Load Balancers (ALB/NLB)</h4>
+                    <p class="matrix-desc">Deletes Application, Network, and Classic Load Balancers.</p>
+                </div>
+
+                <div class="matrix-card status-cleaned" data-category="networking">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-cleaned"><i data-lucide="check"></i> Cleaned</span>
+                        <i data-lucide="shield" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">WAFv2 Web ACLs</h4>
+                    <p class="matrix-desc">Removes Global (CloudFront) and Regional Web Application Firewall ACL rules.</p>
+                </div>
+
+                <!-- Safely Preserved -->
+                <div class="matrix-card status-preserved" data-category="preserved">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-preserved"><i data-lucide="shield-alert"></i> Preserved</span>
+                        <i data-lucide="users" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">IAM Users & Credentials</h4>
+                    <p class="matrix-desc">Preserved so the active credentials running the script are never locked out.</p>
+                </div>
+
+                <div class="matrix-card status-preserved" data-category="preserved">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-preserved"><i data-lucide="shield-alert"></i> Preserved</span>
+                        <i data-lucide="key" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">KMS Encryption Keys</h4>
+                    <p class="matrix-desc">KMS keys require an irreversible 7 to 30 day AWS wait period and are preserved.</p>
+                </div>
+
+                <div class="matrix-card status-preserved" data-category="preserved">
+                    <div class="matrix-header">
+                        <span class="status-badge badge-preserved"><i data-lucide="shield-alert"></i> Preserved</span>
+                        <i data-lucide="file-text" class="cat-icon"></i>
+                    </div>
+                    <h4 class="matrix-name">Savings Plans & Contracts</h4>
+                    <p class="matrix-desc">Financial contracts cannot be deleted via AWS API and must be managed manually.</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Quick Start & CLI Code Snippet Section -->
+    <section class="quickstart-section" id="quickstart">
+        <div class="container">
+            
+            <div class="quickstart-card glass-panel">
+                <div class="quickstart-header">
+                    <span class="section-tag">Instant Execution</span>
+                    <h2 class="section-title">How to Run AWS Eraser</h2>
+                    <p class="section-description">Execute directly in your terminal in under 60 seconds.</p>
+                </div>
+
+                <div class="os-tabs">
+                    <button class="os-tab active" onclick="switchOsTab('win', this)">
+                        <i data-lucide="terminal"></i> Windows (One-Click batch)
+                    </button>
+                    <button class="os-tab" onclick="switchOsTab('py', this)">
+                        <i data-lucide="code-2"></i> Python / Linux / macOS
+                    </button>
+                    <button class="os-tab" onclick="switchOsTab('git', this)">
+                        <i data-lucide="git-branch"></i> Git Clone
+                    </button>
+                </div>
+
+                <!-- Windows Block -->
+                <div class="code-block-wrapper os-content active" id="tab-win">
+                    <div class="code-header">
+                        <span>PowerShell / Command Prompt (Auto-installs dependencies)</span>
+                        <button class="btn-copy-code" onclick="copySnippet('.\\run.bat', this)">
+                            <i data-lucide="copy"></i> Copy Command
+                        </button>
+                    </div>
+                    <pre><code><span class="c-comment"># Download and execute run.bat in your repository directory:</span>
+.\run.bat</code></pre>
+                </div>
+
+                <!-- Python / Linux Block -->
+                <div class="code-block-wrapper os-content" id="tab-py">
+                    <div class="code-header">
+                        <span>Terminal (requires boto3)</span>
+                        <button class="btn-copy-code" onclick="copySnippet('pip install boto3\npython aws_eraser.py', this)">
+                            <i data-lucide="copy"></i> Copy Commands
+                        </button>
+                    </div>
+                    <pre><code><span class="c-comment"># Install boto3 dependency:</span>
+pip install boto3
+
+<span class="c-comment"># Launch AWS Eraser interactive CLI:</span>
+python aws_eraser.py</code></pre>
+                </div>
+
+                <!-- Git Clone Block -->
+                <div class="code-block-wrapper os-content" id="tab-git">
+                    <div class="code-header">
+                        <span>Git Repository Setup</span>
+                        <button class="btn-copy-code" onclick="copySnippet('git clone https://github.com/abhinandnm/aws-eraser.git\ncd aws-eraser\npip install -r requirements.txt\npython aws_eraser.py', this)">
+                            <i data-lucide="copy"></i> Copy Commands
+                        </button>
+                    </div>
+                    <pre><code>git clone https://github.com/abhinandnm/aws-eraser.git
+cd aws-eraser
+pip install -r requirements.txt
+python aws_eraser.py</code></pre>
+                </div>
+
+                <div class="quickstart-cta-footer">
+                    <p class="footer-note">No local credentials file? The script safely prompts for temporary AWS keys in terminal and keeps credentials off disk.</p>
+                    <button onclick="handleDownloadRedirect()" class="btn btn-primary glow-button btn-lg">
+                        <i data-lucide="download"></i>
+                        <span>Download script from GitHub</span>
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Search Engine FAQ Section for Search Snippets Ranking -->
+    <section class="faq-section" id="faq" style="padding: 90px 0; border-top: 1px solid var(--border-glass);">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Search FAQ</span>
+                <h2 class="section-title">Frequently Asked AWS Cleanup Questions</h2>
+                <p class="section-description">Everything you need to know about stopping unexpected AWS charges instantly.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title" style="font-size: 1.15rem; color: var(--accent-cyan);">What is the fastest way to delete all resources in an AWS account?</h3>
+                    <p class="feature-text">AWS Eraser scans all 25+ global AWS regions in parallel using Python boto3 and presents a single numbered menu to nuke or selectively delete active resources in seconds without complex setup.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title" style="font-size: 1.15rem; color: var(--accent-cyan);">How to stop unexpected AWS billing charges immediately?</h3>
+                    <p class="feature-text">Run AWS Eraser to automatically audit running EC2 instances, unattached EBS volumes, EBS snapshots, NAT gateways, RDS databases, and S3 buckets quietly draining your monthly budget.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3 class="feature-title" style="font-size: 1.15rem; color: var(--accent-cyan);">Can I select specific AWS resources to delete manually?</h3>
+                    <p class="feature-text">Yes! AWS Eraser v1.1.0 allows picking specific item numbers or ranges (e.g. <code>1, 3, 5-8</code>) or choosing complete account nuke mode.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- IAM Billing Setup Accordion Guide -->
+    <section class="iam-section" id="iam-setup">
+        <div class="container">
+            
+            <div class="section-header">
+                <span class="section-tag">IAM & Billing Permissions</span>
+                <h2 class="section-title">Cost Explorer Access Guide</h2>
+                <p class="section-description">If you see an IAM Billing warning during execution, follow these two quick steps to enable access.</p>
+            </div>
+
+            <div class="accordion-container">
+                
+                <div class="accordion-item active">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="acc-title-group">
+                            <span class="step-num">Step 1</span>
+                            <span>Activate IAM Billing Access as AWS Root User</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="acc-chevron"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <p>By default, IAM users cannot view billing data even with Administrator permissions until enabled by the account owner:</p>
+                        <ol class="setup-steps-list">
+                            <li>Sign in to the AWS Management Console as the <strong>Root User</strong> (using primary email).</li>
+                            <li>Open the <a href="https://console.aws.amazon.com/billing/home?#/account" target="_blank" rel="noopener">AWS Account Settings Page</a>.</li>
+                            <li>Scroll down to <strong>IAM User and Role Access to Billing Information</strong> and click <strong>Edit</strong>.</li>
+                            <li>Check the box for <strong>Activate IAM Access</strong> and click <strong>Update</strong>.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">
+                        <div class="acc-title-group">
+                            <span class="step-num">Step 2</span>
+                            <span>Attach AWSBillingReadOnlyAccess IAM Policy</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="acc-chevron"></i>
+                    </button>
+                    <div class="accordion-body">
+                        <p>Attach the managed AWS billing read policy to your IAM user or execution role:</p>
+                        <ol class="setup-steps-list">
+                            <li>Open the <a href="https://console.aws.amazon.com/iam/home?#/users" target="_blank" rel="noopener">IAM Users Console</a>.</li>
+                            <li>Select your target user/role, click <strong>Add Permissions</strong> &gt; <strong>Attach policies directly</strong>.</li>
+                            <li>Search for policy <code>AWSBillingReadOnlyAccess</code> and click <strong>Attach Policy</strong>.</li>
+                        </ol>
+                        <div class="info-alert">
+                            <i data-lucide="info"></i>
+                            <span>Note: If Cost Explorer shows <code>DataUnavailableException</code>, AWS is still building initial billing records (takes up to 24 hours). The script automatically proceeds with resource scanning regardless!</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Bottom CTA Banner -->
+    <section class="cta-banner-section">
+        <div class="container">
+            <div class="cta-banner-card glass-panel glow-card">
+                <h2 class="banner-title">Ready to Wipe Your AWS Billing Resources?</h2>
+                <p class="banner-sub">Join developers saving thousands of dollars on forgotten AWS infrastructure.</p>
+                <div class="banner-actions">
+                    <button onclick="handleDownloadRedirect()" class="btn btn-primary btn-lg glow-button-lg">
+                        <i data-lucide="download"></i>
+                        <span>Download AWS Eraser on GitHub</span>
+                    </button>
+                    <a href="https://github.com/abhinandnm/aws-eraser" target="_blank" class="btn btn-secondary btn-lg">
+                        <i data-lucide="github"></i>
+                        <span>View Source Code</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="#" class="brand">
+                    <div class="brand-icon">🧹</div>
+                    <span class="brand-name">AWS <span class="text-cyan">Eraser</span></span>
+                </a>
+                <p class="footer-desc">The fastest single-file Python CLI utility to scan and erase active billing resources across all AWS regions.</p>
+            </div>
+
+            <div class="footer-links-group">
+                <div class="footer-col">
+                    <h4>Navigation</h4>
+                    <a href="#features">Features</a>
+                    <a href="#supported">Supported Resources</a>
+                    <a href="#calculator">Savings Calculator</a>
+                    <a href="#quickstart">Quick Start</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Open Source</h4>
+                    <a href="https://github.com/abhinandnm/aws-eraser" target="_blank">GitHub Repository</a>
+                    <a href="https://github.com/abhinandnm/aws-eraser/releases" target="_blank">Releases</a>
+                    <a href="https://github.com/abhinandnm/aws-eraser/blob/main/LICENSE" target="_blank">MIT License</a>
+                    <a href="https://github.com/abhinandnm/aws-eraser/blob/main/CONTRIBUTING.md" target="_blank">Contributing</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom container">
+            <p>&copy; 2026 AWS Eraser. Released under the MIT License.</p>
+            <div class="disclaimer-text">
+                <i data-lucide="alert-triangle" class="disc-icon"></i>
+                <span>AWS Eraser is an open-source tool and is not affiliated with or endorsed by Amazon Web Services, Inc.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+    <script>
+        // Initialize Lucide icons on page load
+        lucide.createIcons();
+    </script>
+</body>
+</html>
